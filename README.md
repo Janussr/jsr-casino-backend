@@ -1,2 +1,2 @@
 # jsr-casino-backend
-# jsr-casino-backend
+#Hobby project
