@@ -1,0 +1,14 @@
+# Ignore appsettings.json (holds secrets)
+appsettings.json
+
+# Ignore bin/ og obj/ mapper
+bin/
+obj/
+
+# Ignore user secrets folder
+*.user
+
+# Ignore VS temp filer
+.vs/
+*.log
+*.suo

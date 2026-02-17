@@ -1,0 +1,309 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\janus\\source\\repos\\PokerProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\dtos\\scoredto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\dtos\\scoredto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\data\\pokerdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\data\\pokerdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\models\\halloffame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\models\\halloffame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\models\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\models\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\pokerproject.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\pokerproject.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\models\\session.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\models\\session.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\models\\score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\models\\score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|c:\\users\\janus\\source\\repos\\pokerproject\\pokerproject\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA8784D8-4CCB-B698-3AAE-5019E35D838D}|PokerProject\\PokerProject.csproj|solutionrelative:pokerproject\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\.gitignore",
+              "RelativeDocumentMoniker": "PokerProject\\.gitignore",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\.gitignore",
+              "RelativeToolTip": "PokerProject\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF8SURBVDhPjVNLTgJBEG1lwpoFB3GNK9fieA48hD8iwT/ihwgSDAIHgAGXXsEV18CNzL/LquqZdsYM6kteXqcy3fWqpmpNRBgOhyABBEgpAFVKPIMUcYzUyOU\u002BXM/b2qtU3vkSfRjjZTCAMAw1A2LwzdFoBPP5HNqdzuL27n4juibWI\u002BUshBA1DIkhEx9iEorFotgslQqGYbxxAGFEqt1MxmPWJLbLZdZ\u002Bv89q5PMFPiTR6z2zdaxR0fXA0XTBcVywkb4fwHXjRteecIDNQ7UmExVYAdPcxYaqclN46na5WenMKjtlVnTYwcXlVYaDqImW9beD5N/TeGy32QHXm6hZ03ZgiSQHp2fnWQ4oBmJqWSqwAqZpZjt4aLXAD4J0VqyZsmoubfB8H2r1eoaD6NXZ9HcHO\u002BSA3f4AjifXl8rItOETM8ckB9WTWpYD9RdeZ1PWVWAHWXPQaDb59f/w8LiqHeh1pvGkCaP6qB8yXusoxmuNZ7XmII4O9vGuEF86osuDYRkpYQAAAABJRU5ErkJggg==",
+              "WhenOpened": "2026-02-05T17:05:04.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "PokerProject\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\appsettings.Development.json",
+              "RelativeToolTip": "PokerProject\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-05T16:32:35.377Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\appsettings.json",
+              "RelativeDocumentMoniker": "PokerProject\\appsettings.json",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\appsettings.json",
+              "RelativeToolTip": "PokerProject\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-05T15:26:07.815Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Services\\IUserService.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Services\\IUserService.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Services\\IUserService.cs",
+              "RelativeToolTip": "PokerProject\\Services\\IUserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:20:37.547Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "PokerProject\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAwAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:19:22.049Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ScoreDto.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\DTOs\\ScoreDto.cs",
+              "RelativeDocumentMoniker": "PokerProject\\DTOs\\ScoreDto.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\DTOs\\ScoreDto.cs",
+              "RelativeToolTip": "PokerProject\\DTOs\\ScoreDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:18:34.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UserDto.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\DTOs\\UserDto.cs",
+              "RelativeDocumentMoniker": "PokerProject\\DTOs\\UserDto.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\DTOs\\UserDto.cs",
+              "RelativeToolTip": "PokerProject\\DTOs\\UserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:18:18.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PokerDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Data\\PokerDbContext.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Data\\PokerDbContext.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Data\\PokerDbContext.cs",
+              "RelativeToolTip": "PokerProject\\Data\\PokerDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:14:07.449Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "HallOfFame.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\HallOfFame.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Models\\HallOfFame.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\HallOfFame.cs",
+              "RelativeToolTip": "PokerProject\\Models\\HallOfFame.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:08:51.34Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Game.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\Game.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Models\\Game.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\Game.cs",
+              "RelativeToolTip": "PokerProject\\Models\\Game.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:08:04.654Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Program.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Program.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Program.cs",
+              "RelativeToolTip": "PokerProject\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:03:35.517Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PokerProject.http",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\PokerProject.http",
+              "RelativeDocumentMoniker": "PokerProject\\PokerProject.http",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\PokerProject.http",
+              "RelativeToolTip": "PokerProject\\PokerProject.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-02-05T15:26:15.072Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "PokerProject\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:03:31.238Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Services\\UserService.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Services\\UserService.cs",
+              "RelativeToolTip": "PokerProject\\Services\\UserService.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwCQAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:20:41.516Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Session.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\Session.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Models\\Session.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\Session.cs",
+              "RelativeToolTip": "PokerProject\\Models\\Session.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:07:50.97Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\User.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\User.cs",
+              "RelativeToolTip": "PokerProject\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:07:28.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Score.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\Score.cs",
+              "RelativeDocumentMoniker": "PokerProject\\Models\\Score.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\Models\\Score.cs",
+              "RelativeToolTip": "PokerProject\\Models\\Score.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:08:30.35Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "PokerProject\\WeatherForecast.cs",
+              "ToolTip": "C:\\Users\\janus\\source\\repos\\PokerProject\\PokerProject\\WeatherForecast.cs",
+              "RelativeToolTip": "PokerProject\\WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T14:03:36.393Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
