@@ -1,5 +1,7 @@
 # Ignore appsettings.json (holds secrets)
 appsettings.json
+appsettings.Development.json
+appsettings.Production.json
 
 # Ignore bin/ og obj/ mapper
 bin/
