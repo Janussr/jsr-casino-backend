@@ -1,30 +1,50 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PokerProject.Data;
 using PokerProject.DTOs;
 using PokerProject.Models;
-using Microsoft.EntityFrameworkCore;
+using PokerProject.Services;
 
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly PokerDbContext _context;
+    private readonly IUserService _userService;
 
-    public UsersController(PokerDbContext context)
+    public UsersController(IUserService userService)
     {
-        _context = context;
+        _userService = userService;
     }
+
+
+
+    [HttpPost("register")]
+    public async Task<ActionResult<UserDto>> Register(RegisterUserDto dto)
+    {
+        try
+        {
+            var user = await _userService.RegisterAsync(dto);
+            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserDto>> GetUserById(int id)
+    {
+        var user = await _userService.GetUserByIdAsync(id);
+        if (user == null) return NotFound();
+        return Ok(user);
+    }
+
 
     [HttpGet]
-    public async Task<IEnumerable<UserDto>> GetUsers()
+    public async Task<ActionResult<UserDto>> GetAllUsers()
     {
-        return await _context.Users
-            .Select(u => new UserDto
-            {
-                Id = u.Id,
-                Username = u.Username,
-                Name = u.Name
-            })
-            .ToListAsync();
+        var users = await _userService.GetAllUsersAsync();
+        return Ok(users);
     }
+
+
 }

@@ -5,6 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PokerProject.Services
 {
+    public interface IUserService
+    {
+        Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        Task<UserDto?> GetUserByIdAsync(int id);
+        Task<UserDto> RegisterAsync(RegisterUserDto dto);
+
+    }
+
     public class UserService : IUserService
     {
         private readonly PokerDbContext _context;
@@ -16,14 +24,11 @@ namespace PokerProject.Services
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            return await _context.Users
-                .Select(u => new UserDto
-                {
+            return await _context.Users.Select(u => new UserDto {
                     Id = u.Id,
                     Username = u.Username,
                     Name = u.Name
-                })
-                .ToListAsync();
+                }).ToListAsync();
         }
 
         public async Task<UserDto?> GetUserByIdAsync(int id)
@@ -39,20 +44,33 @@ namespace PokerProject.Services
             };
         }
 
-        public async Task<UserDto> CreateUserAsync(UserDto userDto)
+
+        public async Task<UserDto> RegisterAsync(RegisterUserDto dto)
         {
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == dto.Username);
+
+            if (existingUser != null)
+                throw new Exception("Username already exists");
+
             var user = new User
             {
-                Username = userDto.Username,
-                Name = userDto.Name,
-                PasswordHash = "TODO" // hash senere
+                Username = dto.Username,
+                Name = dto.Name,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            userDto.Id = user.Id;
-            return userDto;
+            return new UserDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Name = user.Name
+            };
         }
+
+
     }
 }

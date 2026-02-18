@@ -1,15 +1,16 @@
-﻿namespace PokerProject.Models
+﻿using PokerProject.Models;
+
+public class Game
 {
-    public class Game
-    {
-        public int Id { get; set; }
-        public int SessionId { get; set; }
-        public int GameNumber { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public int Id { get; set; }
+    public int GameNumber { get; set; }
 
-        // Navigation properties
-        public Session Session { get; set; } = null!;
-        public ICollection<Score> Scores { get; set; } = new List<Score>();
-    }
+    public DateTime StartedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? EndedAt { get; set; }
 
+    public bool IsFinished { get; set; }
+
+    public ICollection<Score> Scores { get; set; } = new List<Score>();
+
+    public HallOfFame? Winner { get; set; }
 }

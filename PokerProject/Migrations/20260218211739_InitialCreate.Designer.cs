@@ -12,7 +12,7 @@ using PokerProject.Data;
 namespace PokerProject.Migrations
 {
     [DbContext(typeof(PokerDbContext))]
-    [Migration("20260205164003_InitialCreate")]
+    [Migration("20260218211739_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace PokerProject.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("PokerProject.Models.Game", b =>
+            modelBuilder.Entity("Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,24 +33,27 @@ namespace PokerProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("EndedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("GameNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("SessionId")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SessionId", "GameNumber")
+                    b.HasIndex("GameNumber")
                         .IsUnique();
 
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("PokerProject.Models.HallOfFame", b =>
+            modelBuilder.Entity("HallOfFame", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +61,7 @@ namespace PokerProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("SessionId")
+                    b.Property<int>("GameId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -72,60 +75,12 @@ namespace PokerProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SessionId");
+                    b.HasIndex("GameId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
                     b.ToTable("HallOfFames");
-                });
-
-            modelBuilder.Entity("PokerProject.Models.Score", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("UserId", "GameId")
-                        .IsUnique();
-
-                    b.ToTable("Scores");
-                });
-
-            modelBuilder.Entity("PokerProject.Models.Session", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("SessionDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("PokerProject.Models.User", b =>
@@ -156,22 +111,41 @@ namespace PokerProject.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("PokerProject.Models.Game", b =>
+            modelBuilder.Entity("Score", b =>
                 {
-                    b.HasOne("PokerProject.Models.Session", "Session")
-                        .WithMany("Games")
-                        .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("Session");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("UserId", "GameId")
+                        .IsUnique();
+
+                    b.ToTable("Scores");
                 });
 
-            modelBuilder.Entity("PokerProject.Models.HallOfFame", b =>
+            modelBuilder.Entity("HallOfFame", b =>
                 {
-                    b.HasOne("PokerProject.Models.Session", "Session")
-                        .WithMany("HallOfFames")
-                        .HasForeignKey("SessionId")
+                    b.HasOne("Game", "Game")
+                        .WithOne("Winner")
+                        .HasForeignKey("HallOfFame", "GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -181,14 +155,14 @@ namespace PokerProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Session");
+                    b.Navigation("Game");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PokerProject.Models.Score", b =>
+            modelBuilder.Entity("Score", b =>
                 {
-                    b.HasOne("PokerProject.Models.Game", "Game")
+                    b.HasOne("Game", "Game")
                         .WithMany("Scores")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -205,16 +179,11 @@ namespace PokerProject.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PokerProject.Models.Game", b =>
+            modelBuilder.Entity("Game", b =>
                 {
                     b.Navigation("Scores");
-                });
 
-            modelBuilder.Entity("PokerProject.Models.Session", b =>
-                {
-                    b.Navigation("Games");
-
-                    b.Navigation("HallOfFames");
+                    b.Navigation("Winner");
                 });
 
             modelBuilder.Entity("PokerProject.Models.User", b =>
