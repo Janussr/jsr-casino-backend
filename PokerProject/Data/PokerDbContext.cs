@@ -17,15 +17,12 @@ namespace PokerProject.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Game nummer unik globalt (eller pr. spil, hvis du vil ændre senere)
             modelBuilder.Entity<Game>()
                 .HasIndex(g => g.GameNumber)
                 .IsUnique();
 
-            // Score unik per user per game
             modelBuilder.Entity<Score>()
-                .HasIndex(s => new { s.UserId, s.GameId })
-                .IsUnique();
+                .HasIndex(s => new { s.UserId, s.GameId });
 
             // Relations
             modelBuilder.Entity<User>()

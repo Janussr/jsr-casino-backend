@@ -1,16 +1,17 @@
-﻿using PokerProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PokerProject.Data;
+using PokerProject.DTOs;
 using PokerProject.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace PokerProject.Services
 {
     public interface IGameService
     {
-        Task<Game> StartGameAsync();
-        Task<Score> AddScoreAsync(int gameId, int userId, int value);
-        Task<Game> EndGameAsync(int gameId);
-        Task<List<Game>> GetAllGamesAsync();
-        Task<Game?> GetGameByIdAsync(int gameId);
+        Task<GameDto> StartGameAsync();
+        Task<ScoreDto> AddScoreAsync(int gameId, int userId, int value);
+        Task<GameDto> EndGameAsync(int gameId);
+        Task<List<GameDto>> GetAllGamesAsync();
+        Task<GameDto?> GetGameByIdAsync(int gameId);
     }
 
 
@@ -24,16 +25,11 @@ namespace PokerProject.Services
         }
 
         // Start a new game
-        public async Task<Game> StartGameAsync()
+        public async Task<GameDto> StartGameAsync()
         {
-            // Find næste GameNumber
-            int nextGameNumber = await _context.Games.AnyAsync()
-                ? await _context.Games.MaxAsync(g => g.GameNumber) + 1
-                : 1;
-
             var game = new Game
             {
-                GameNumber = nextGameNumber,
+                GameNumber = await GetNextGameNumber(),
                 StartedAt = DateTime.UtcNow,
                 IsFinished = false
             };
@@ -41,11 +37,27 @@ namespace PokerProject.Services
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
 
-            return game;
+            return new GameDto
+            {
+                Id = game.Id,
+                GameNumber = game.GameNumber,
+                StartedAt = game.StartedAt,
+                IsFinished = game.IsFinished
+            };
         }
 
+        private async Task<int> GetNextGameNumber()
+        {
+            if (!await _context.Games.AnyAsync())
+                return 1;
+
+            return await _context.Games.MaxAsync(g => g.GameNumber) + 1;
+        }
+
+
+
         // Add score for a player in a game
-        public async Task<Score> AddScoreAsync(int gameId, int userId, int value)
+        public async Task<ScoreDto> AddScoreAsync(int gameId, int userId, int value)
         {
             var score = new Score
             {
@@ -58,11 +70,20 @@ namespace PokerProject.Services
             _context.Scores.Add(score);
             await _context.SaveChangesAsync();
 
-            return score;
+            // Returnér som DTO
+            return new ScoreDto
+            {
+                Id = score.Id,
+                GameId = score.GameId,
+                UserId = score.UserId,
+                Value = score.Value,
+                CreatedAt = score.CreatedAt
+            };
         }
 
+
         // End game, calculate winner and update HallOfFame
-        public async Task<Game> EndGameAsync(int gameId)
+        public async Task<GameDto> EndGameAsync(int gameId)
         {
             var game = await _context.Games
                 .Include(g => g.Scores)
@@ -74,54 +95,111 @@ namespace PokerProject.Services
             if (game.IsFinished)
                 throw new Exception("Game already finished");
 
-            // Calculate winner (highest total)
-            var winnerGroup = game.Scores
+            if (!game.Scores.Any())
+                throw new Exception("No scores registered");
+
+            // 🔥 Beregn totals pr spiller
+            var totals = game.Scores
                 .GroupBy(s => s.UserId)
-                .Select(g => new { UserId = g.Key, Total = g.Sum(s => s.Value) })
-                .OrderByDescending(g => g.Total)
-                .FirstOrDefault();
-
-            if (winnerGroup != null)
-            {
-                var hall = new HallOfFame
+                .Select(g => new
                 {
-                    GameId = game.Id,
-                    UserId = winnerGroup.UserId,
-                    WinningScore = winnerGroup.Total,
-                    WinDate = DateTime.UtcNow
-                };
+                    UserId = g.Key,
+                    Total = g.Sum(x => x.Value)
+                })
+                .OrderByDescending(x => x.Total)
+                .ToList();
 
-                _context.HallOfFames.Add(hall);
-            }
+            var winnerData = totals.First();
 
+            // 🏆 Opret HallOfFame entry
+            var hallOfFame = new HallOfFame
+            {
+                GameId = game.Id,
+                UserId = winnerData.UserId,
+                WinningScore = winnerData.Total,
+                WinDate = DateTime.UtcNow
+            };
+
+            _context.HallOfFames.Add(hallOfFame);
+
+            // Mark game as finished
             game.IsFinished = true;
             game.EndedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
-            return game;
+            // Return DTO (så vi undgår JSON cycle)
+            return new GameDto
+            {
+                Id = game.Id,
+                GameNumber = game.GameNumber,
+                StartedAt = game.StartedAt,
+                EndedAt = game.EndedAt,
+                IsFinished = game.IsFinished,
+                WinnerUserId = winnerData.UserId,
+                WinningScore = winnerData.Total
+            };
         }
+
 
         // Get all games
-        public async Task<List<Game>> GetAllGamesAsync()
+        public async Task<List<GameDto>> GetAllGamesAsync()
         {
-            return await _context.Games
-                .Include(g => g.Scores)
-                .ThenInclude(s => s.User)
-                .Include(g => g.Winner)
-                .ThenInclude(h => h.User)
+            var games = await _context.Games
+                .Select(g => new GameDto
+                {
+                    Id = g.Id,
+                    GameNumber = g.GameNumber,
+                    StartedAt = g.StartedAt,
+                    EndedAt = g.EndedAt,
+                    IsFinished = g.IsFinished,
+
+                    Scores = g.Scores.Select(s => new ScoreDto
+                    {
+                        UserId = s.UserId,
+                        UserName = s.User.Name, 
+                        Value = s.Value
+                    }).ToList(),
+
+                    Winner = g.Winner == null ? null : new WinnerDto
+                    {
+                        UserId = g.Winner.UserId,
+                        UserName = g.Winner.User.Name, 
+                        WinningScore = g.Winner.WinningScore,
+                        WinDate = g.Winner.WinDate
+                    }
+                })
                 .ToListAsync();
+
+            return games;
         }
 
+
+
         // Get a single game
-        public async Task<Game?> GetGameByIdAsync(int gameId)
+        public async Task<GameDto?> GetGameByIdAsync(int id)
         {
-            return await _context.Games
+            var game = await _context.Games
                 .Include(g => g.Scores)
-                .ThenInclude(s => s.User)
-                .Include(g => g.Winner)
-                .ThenInclude(h => h.User)
-                .FirstOrDefaultAsync(g => g.Id == gameId);
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (game == null) return null;
+
+            return new GameDto
+            {
+                Id = game.Id,
+                GameNumber = game.GameNumber,
+                StartedAt = game.StartedAt,
+                EndedAt = game.EndedAt,
+                IsFinished = game.IsFinished,
+                Scores = game.Scores.Select(s => new ScoreDto
+                {
+                    Id = s.Id,
+                    UserId = s.UserId,
+                    Value = s.Value
+                }).ToList()
+            };
         }
+
     }
 }

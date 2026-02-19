@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PokerProject.Services;
+using PokerProject.DTOs;
 using PokerProject.Models;
+using PokerProject.Services;
 
 namespace PokerProject.Controllers
 {
@@ -8,9 +9,9 @@ namespace PokerProject.Controllers
     [Route("api/[controller]")]
     public class GamesController : ControllerBase
     {
-        private readonly GameService _gameService;
+        private readonly IGameService _gameService;
 
-        public GamesController(GameService gameService)
+        public GamesController(IGameService gameService)
         {
             _gameService = gameService;
         }
@@ -25,9 +26,9 @@ namespace PokerProject.Controllers
 
         // Add score
         [HttpPost("{gameId}/score")]
-        public async Task<ActionResult<Score>> AddScore(int gameId, [FromBody] Score score)
+        public async Task<ActionResult<Score>> AddScore(int gameId, [FromBody] AddScoreDto dto)
         {
-            var added = await _gameService.AddScoreAsync(gameId, score.UserId, score.Value);
+            var added = await _gameService.AddScoreAsync(gameId, dto.UserId, dto.Value);
             return Ok(added);
         }
 
@@ -49,7 +50,7 @@ namespace PokerProject.Controllers
 
         // Get single game
         [HttpGet("{gameId}")]
-        public async Task<ActionResult<Game>> GetGame(int gameId)
+        public async Task<ActionResult<GameDto>> GetGame(int gameId)
         {
             var game = await _gameService.GetGameByIdAsync(gameId);
             if (game == null) return NotFound();
