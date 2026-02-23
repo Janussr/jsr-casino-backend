@@ -13,4 +13,4 @@ public class Game
     public ICollection<Score> Scores { get; set; } = new List<Score>();
 
     public HallOfFame? Winner { get; set; }
-}
+} 

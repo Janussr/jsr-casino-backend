@@ -124,8 +124,7 @@ namespace PokerProject.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Scores_UserId_GameId",
                 table: "Scores",
-                columns: new[] { "UserId", "GameId" },
-                unique: true);
+                columns: new[] { "UserId", "GameId" });
         }
 
         /// <inheritdoc />

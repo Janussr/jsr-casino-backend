@@ -23,13 +23,12 @@ builder.Services.AddScoped<IGameService, GameService>();
 //CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // frontend URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 
@@ -37,17 +36,16 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 
-
-
-app.UseCors("AllowFrontend");
-
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 

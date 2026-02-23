@@ -12,8 +12,8 @@ using PokerProject.Data;
 namespace PokerProject.Migrations
 {
     [DbContext(typeof(PokerDbContext))]
-    [Migration("20260219163629_RemoveUniqueScoreConstraint")]
-    partial class RemoveUniqueScoreConstraint
+    [Migration("20260221142714_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

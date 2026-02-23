@@ -8,10 +8,10 @@ namespace PokerProject.Data
         public PokerDbContext(DbContextOptions<PokerDbContext> options)
             : base(options) { }
 
-        public DbSet<User> Users => Set<User>();
-        public DbSet<Game> Games => Set<Game>();
-        public DbSet<Score> Scores => Set<Score>();
-        public DbSet<HallOfFame> HallOfFames => Set<HallOfFame>();
+        public DbSet<User> Users { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<Score> Scores { get; set; }
+        public DbSet<HallOfFame> HallOfFames { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
