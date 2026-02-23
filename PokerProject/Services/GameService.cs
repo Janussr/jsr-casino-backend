@@ -224,7 +224,6 @@ namespace PokerProject.Services
             await _context.SaveChangesAsync();
         }
 
-        // Hent deltagere til et spil
         public async Task<List<ParticipantDto>> GetParticipantsAsync(int gameId)
         {
             return await _context.GameParticipants
@@ -238,7 +237,6 @@ namespace PokerProject.Services
                 .ToListAsync();
         }
 
-        // Check om en bruger er deltager
         public async Task<bool> IsUserParticipantAsync(int gameId, int userId)
         {
             return await _context.GameParticipants

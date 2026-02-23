@@ -20,12 +20,15 @@ namespace PokerProject.Services
         }
         public async Task<List<HallOfFameDto>> GetEntireHallOfFameAsync()
         {
-
-            var hallOfFame = await _context.HallOfFames.Select(h => new HallOfFameDto
-            {
-                PlayerName = h.User.Name,
-                //Wins = h.Wins,
-            }).ToListAsync();
+            var hallOfFame = await _context.HallOfFames
+                .GroupBy(h => new { h.UserId, h.User.Name })
+                .Select(g => new HallOfFameDto
+                {
+                    PlayerName = g.Key.Name,
+                    Wins = g.Count()
+                })
+                .OrderByDescending(x => x.Wins)   //order by most wins
+                .ToListAsync();
 
             return hallOfFame;
         }
