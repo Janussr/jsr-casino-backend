@@ -18,6 +18,7 @@ builder.Services.AddDbContext<PokerDbContext>(options =>
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IHallOfFameService, HallOfFameService>();
 
 
 //CORS

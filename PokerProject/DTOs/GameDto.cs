@@ -7,10 +7,13 @@
         public DateTime StartedAt { get; set; }
         public DateTime? EndedAt { get; set; }
         public bool IsFinished { get; set; }
-        public int? WinnerUserId { get; set; }
-        public int? WinningScore { get; set; }
 
+
+        public List<ParticipantDto> Participants { get; set; } = new();
+        // Liste af alle spillere i spillet
         public List<ScoreDto> Scores { get; set; } = new();
+
+        // Vinderen (kan være null, hvis spillet ikke er færdigt)
         public WinnerDto? Winner { get; set; }
     }
 }

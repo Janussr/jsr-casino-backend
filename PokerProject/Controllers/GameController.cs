@@ -18,7 +18,7 @@ namespace PokerProject.Controllers
 
         // Start a new game
         [HttpPost("start")]
-        public async Task<ActionResult<Game>> StartGame()
+        public async Task<ActionResult<GameDto>> StartGame()
         {
             var game = await _gameService.StartGameAsync();
             return Ok(game);
@@ -26,7 +26,7 @@ namespace PokerProject.Controllers
 
         // Add score
         [HttpPost("{gameId}/score")]
-        public async Task<ActionResult<Score>> AddScore(int gameId, [FromBody] AddScoreDto dto)
+        public async Task<ActionResult<ScoreDto>> AddScore(int gameId, [FromBody] AddScoreDto dto)
         {
             var added = await _gameService.AddScoreAsync(gameId, dto.UserId, dto.Value);
             return Ok(added);
@@ -34,7 +34,7 @@ namespace PokerProject.Controllers
 
         // End game
         [HttpPost("{gameId}/end")]
-        public async Task<ActionResult<Game>> EndGame(int gameId)
+        public async Task<ActionResult<GameDto>> EndGame(int gameId)
         {
             var ended = await _gameService.EndGameAsync(gameId);
             return Ok(ended);
@@ -42,7 +42,7 @@ namespace PokerProject.Controllers
 
         // Get all games
         [HttpGet]
-        public async Task<ActionResult<List<Game>>> GetAllGames()
+        public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
             var games = await _gameService.GetAllGamesAsync();
             return Ok(games);
@@ -55,6 +55,21 @@ namespace PokerProject.Controllers
             var game = await _gameService.GetGameByIdAsync(gameId);
             if (game == null) return NotFound();
             return Ok(game);
+        }
+
+        // Tilføj deltagere
+        [HttpPost("{gameId}/participants")]
+        public async Task<IActionResult> AddParticipants(int gameId, [FromBody] AddParticipantsDto dto)
+        {
+            await _gameService.AddParticipantsAsync(gameId, dto.UserIds);
+            return Ok();
+        }
+
+        // Hent deltagere
+        [HttpGet("{gameId}/participants")]
+        public async Task<List<ParticipantDto>> GetParticipants(int gameId)
+        {
+            return await _gameService.GetParticipantsAsync(gameId);
         }
     }
 }

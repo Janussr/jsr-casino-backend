@@ -17,6 +17,7 @@
         // Navigation properties
         public ICollection<Score> Scores { get; set; } = new List<Score>();
         public ICollection<HallOfFame> HallOfFames { get; set; } = new List<HallOfFame>();
+        public ICollection<GameParticipant> GameParticipants { get; set; } = new List<GameParticipant>();
     }
 
 }

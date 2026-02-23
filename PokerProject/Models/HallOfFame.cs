@@ -12,5 +12,5 @@ public class HallOfFame
 
     public int WinningScore { get; set; }
 
-    public DateTime WinDate { get; set; }
+    public DateTime WinDate { get; set; } = DateTime.UtcNow;
 }

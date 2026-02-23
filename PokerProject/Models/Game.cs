@@ -11,6 +11,6 @@ public class Game
     public bool IsFinished { get; set; }
 
     public ICollection<Score> Scores { get; set; } = new List<Score>();
-
+    public ICollection<GameParticipant> Participants { get; set; } = new List<GameParticipant>();
     public HallOfFame? Winner { get; set; }
 } 

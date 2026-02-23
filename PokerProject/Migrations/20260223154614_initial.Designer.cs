@@ -12,8 +12,8 @@ using PokerProject.Data;
 namespace PokerProject.Migrations
 {
     [DbContext(typeof(PokerDbContext))]
-    [Migration("20260221142714_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260223154614_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -125,17 +125,17 @@ namespace PokerProject.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("Points")
                         .HasColumnType("int");
 
-                    b.Property<int>("Value")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("UserId", "GameId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Scores");
                 });

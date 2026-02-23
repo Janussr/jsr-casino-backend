@@ -12,6 +12,9 @@ namespace PokerProject.Services
         Task<GameDto> EndGameAsync(int gameId);
         Task<List<GameDto>> GetAllGamesAsync();
         Task<GameDto?> GetGameByIdAsync(int gameId);
+        Task AddParticipantsAsync(int gameId, List<int> userIds);
+        Task<List<ParticipantDto>> GetParticipantsAsync(int gameId);
+        Task<bool> IsUserParticipantAsync(int gameId, int userId);
     }
 
 
@@ -57,27 +60,23 @@ namespace PokerProject.Services
 
 
         // Add score for a player in a game
-        public async Task<ScoreDto> AddScoreAsync(int gameId, int userId, int value)
+        public async Task<ScoreDto> AddScoreAsync(int gameId, int userId, int points)
         {
             var score = new Score
             {
                 GameId = gameId,
                 UserId = userId,
-                Value = value,
+                Points = points,
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.Scores.Add(score);
             await _context.SaveChangesAsync();
 
-            // Returnér som DTO
             return new ScoreDto
             {
-                Id = score.Id,
-                GameId = score.GameId,
                 UserId = score.UserId,
-                Value = score.Value,
-                CreatedAt = score.CreatedAt
+                Points = score.Points,
             };
         }
 
@@ -98,20 +97,20 @@ namespace PokerProject.Services
             if (!game.Scores.Any())
                 throw new Exception("No scores registered");
 
-            // 🔥 Beregn totals pr spiller
+            // Beregn totals pr spiller
             var totals = game.Scores
                 .GroupBy(s => s.UserId)
                 .Select(g => new
                 {
                     UserId = g.Key,
-                    Total = g.Sum(x => x.Value)
+                    Total = g.Sum(x => x.Points)
                 })
                 .OrderByDescending(x => x.Total)
                 .ToList();
 
             var winnerData = totals.First();
 
-            // 🏆 Opret HallOfFame entry
+            //  Opret HallOfFame entry
             var hallOfFame = new HallOfFame
             {
                 GameId = game.Id,
@@ -136,13 +135,10 @@ namespace PokerProject.Services
                 StartedAt = game.StartedAt,
                 EndedAt = game.EndedAt,
                 IsFinished = game.IsFinished,
-                WinnerUserId = winnerData.UserId,
-                WinningScore = winnerData.Total
             };
         }
 
 
-        // Get all games
         public async Task<List<GameDto>> GetAllGamesAsync()
         {
             var games = await _context.Games
@@ -154,17 +150,24 @@ namespace PokerProject.Services
                     EndedAt = g.EndedAt,
                     IsFinished = g.IsFinished,
 
+                    Participants = g.Participants.Select(p => new ParticipantDto
+                    {
+                        UserId = p.UserId,
+                        UserName = p.User.Name
+                    }).ToList(),
+
                     Scores = g.Scores.Select(s => new ScoreDto
                     {
+                        Id= s.Id,
                         UserId = s.UserId,
-                        UserName = s.User.Name, 
-                        Value = s.Value
+                        UserName = s.User.Username,
+                        Points = s.Points
                     }).ToList(),
 
                     Winner = g.Winner == null ? null : new WinnerDto
                     {
                         UserId = g.Winner.UserId,
-                        UserName = g.Winner.User.Name, 
+                        UserName = g.Winner.User.Name,
                         WinningScore = g.Winner.WinningScore,
                         WinDate = g.Winner.WinDate
                     }
@@ -194,11 +197,52 @@ namespace PokerProject.Services
                 IsFinished = game.IsFinished,
                 Scores = game.Scores.Select(s => new ScoreDto
                 {
-                    Id = s.Id,
                     UserId = s.UserId,
-                    Value = s.Value
+                    Points = s.Points
                 }).ToList()
             };
+        }
+
+
+        public async Task AddParticipantsAsync(int gameId, List<int> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                var exists = await _context.GameParticipants
+                    .AnyAsync(gp => gp.GameId == gameId && gp.UserId == userId);
+
+                if (!exists)
+                {
+                    _context.GameParticipants.Add(new GameParticipant
+                    {
+                        GameId = gameId,
+                        UserId = userId
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Hent deltagere til et spil
+        public async Task<List<ParticipantDto>> GetParticipantsAsync(int gameId)
+        {
+            return await _context.GameParticipants
+                .Where(gp => gp.GameId == gameId)
+                .Include(gp => gp.User)
+                .Select(gp => new ParticipantDto
+                {
+                    UserId = gp.UserId,
+                    UserName = gp.User.Name
+                })
+                .ToListAsync();
+        }
+
+        // Check om en bruger er deltager
+        public async Task<bool> IsUserParticipantAsync(int gameId, int userId)
+        {
+            return await _context.GameParticipants
+                .AnyAsync(gp => gp.GameId == gameId && gp.UserId == userId);
         }
 
     }

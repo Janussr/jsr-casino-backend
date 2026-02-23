@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PokerProject.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,7 +79,7 @@ namespace PokerProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GameId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -122,9 +122,9 @@ namespace PokerProject.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Scores_UserId_GameId",
+                name: "IX_Scores_UserId",
                 table: "Scores",
-                columns: new[] { "UserId", "GameId" });
+                column: "UserId");
         }
 
         /// <inheritdoc />

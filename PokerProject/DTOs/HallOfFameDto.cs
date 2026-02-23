@@ -2,8 +2,7 @@
 {
     public class HallOfFameDto
     {
-        public string UserName { get; set; } = null!;
-        public int WinningScore { get; set; }
-        public DateTime WinDate { get; set; }
+        public string PlayerName { get; set; } = null!;
+        public int Wins { get; set; }
     }
 }
