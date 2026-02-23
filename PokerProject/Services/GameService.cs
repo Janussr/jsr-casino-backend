@@ -12,6 +12,7 @@ namespace PokerProject.Services
         Task<GameDto> EndGameAsync(int gameId);
         Task<List<GameDto>> GetAllGamesAsync();
         Task<GameDto?> GetGameByIdAsync(int gameId);
+        Task<GameDetailsDto?> GetGameDetailsAsync(int gameId);
         Task AddParticipantsAsync(int gameId, List<int> userIds);
         Task<List<ParticipantDto>> GetParticipantsAsync(int gameId);
         Task<bool> IsUserParticipantAsync(int gameId, int userId);
@@ -203,6 +204,52 @@ namespace PokerProject.Services
             };
         }
 
+        public async Task<GameDetailsDto?> GetGameDetailsAsync(int gameId)
+        {
+            var game = await _context.Games
+                .Include(g => g.Scores)
+                    .ThenInclude(s => s.User)
+                .Include(g => g.Winner)
+                    .ThenInclude(w => w.User)
+                .FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null) return null;
+
+            // Summer points pr spiller
+            var scores = game.Scores
+                .GroupBy(s => new { s.UserId, s.User.Name })
+                .Select(g => new GameScoreboardDto
+                {
+                    UserId = g.Key.UserId,
+                    UserName = g.Key.Name,
+                    TotalPoints = g.Sum(s => s.Points)
+                })
+                .ToList();
+
+            // Map winner
+            WinnerDto? winnerDto = null;
+            if (game.Winner != null)
+            {
+                winnerDto = new WinnerDto
+                {
+                    UserId = game.Winner.UserId,
+                    UserName = game.Winner.User.Name,
+                    WinningScore = game.Winner.WinningScore,
+                    WinDate = game.Winner.WinDate
+                };
+            }
+
+            return new GameDetailsDto
+            {
+                Id = game.Id,
+                GameNumber = game.GameNumber,
+                StartedAt = game.StartedAt,
+                EndedAt = game.EndedAt,
+                IsFinished = game.IsFinished,
+                Scores = scores,
+                Winner = winnerDto
+            };
+        }
 
         public async Task AddParticipantsAsync(int gameId, List<int> userIds)
         {

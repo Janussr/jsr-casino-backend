@@ -49,11 +49,22 @@ namespace PokerProject.Controllers
         }
 
         // Get single game
-        [HttpGet("{gameId}")]
-        public async Task<ActionResult<GameDto>> GetGame(int gameId)
+        //[HttpGet("{gameId}")]
+        //public async Task<ActionResult<GameDto>> GetGame(int gameId)
+        //{
+        //    var game = await _gameService.GetGameByIdAsync(gameId);
+        //    if (game == null) return NotFound();
+        //    return Ok(game);
+        //}
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GameDetailsDto>> GetGameDetails(int id)
         {
-            var game = await _gameService.GetGameByIdAsync(gameId);
-            if (game == null) return NotFound();
+            var game = await _gameService.GetGameDetailsAsync(id);
+
+            if (game == null)
+                return NotFound();
+
             return Ok(game);
         }
 
