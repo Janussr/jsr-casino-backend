@@ -17,6 +17,7 @@ namespace PokerProject.Services
         Task AddParticipantsAsync(int gameId, List<int> userIds);
         Task<List<ParticipantDto>> GetParticipantsAsync(int gameId);
         Task<bool> IsUserParticipantAsync(int gameId, int userId);
+        Task<List<ParticipantDto>> RemoveParticipantAsync(int gameId, int userId);
     }
 
 
@@ -176,8 +177,7 @@ namespace PokerProject.Services
                 IsFinished = true
             };
         }
-
-
+        
         public async Task<List<GameDto>> GetAllGamesAsync()
         {
             var games = await _context.Games
@@ -257,6 +257,19 @@ namespace PokerProject.Services
             if (!game.IsFinished)
                 throw new InvalidOperationException("Spillet er ikke slut endnu");
 
+
+            // TODO: DETTE TJEK ER TIL SÅ ADMIN KAN FÅ LOV AT SE SCOREBOARD MEN ALMINDELIG KAN IKKE.
+            //if (!game.IsFinished)
+            //{
+            //    // Tjek om brugeren er admin
+            //    if (!user.IsInRole("Admin"))
+            //    {
+            //        throw new UnauthorizedAccessException("Spillet er ikke slut endnu, og du har ikke adgang.");
+            //    }
+            //    // Admin kan fortsætte og se detaljerne
+            //}
+
+
             // Summer points pr spiller
             var scores = game.Scores
                 .GroupBy(s => new { s.UserId, s.User.Name })
@@ -330,6 +343,38 @@ namespace PokerProject.Services
         {
             return await _context.GameParticipants
                 .AnyAsync(gp => gp.GameId == gameId && gp.UserId == userId);
+        }
+
+        public async Task<List<ParticipantDto>> RemoveParticipantAsync(int gameId, int userId)
+        {
+            var game = await _context.Games
+                .Include(g => g.Participants)
+                .FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                throw new KeyNotFoundException("Game not found");
+
+            if (game.IsFinished)
+                throw new InvalidOperationException("Cannot remove participants from a finished game");
+
+            var participant = await _context.GameParticipants
+                .FirstOrDefaultAsync(p => p.GameId == gameId && p.UserId == userId);
+
+            if (participant == null)
+                throw new InvalidOperationException("User is not a participant in this game");
+
+            _context.GameParticipants.Remove(participant);
+            await _context.SaveChangesAsync();
+
+            return await _context.GameParticipants
+                .Where(p => p.GameId == gameId)
+                .Include(p => p.User)
+                .Select(p => new ParticipantDto
+                {
+                    UserId = p.UserId,
+                    UserName = p.User.Name
+                })
+                .ToListAsync();
         }
 
     }

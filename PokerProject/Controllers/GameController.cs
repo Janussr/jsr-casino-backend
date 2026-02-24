@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PokerProject.DTOs;
 using PokerProject.Models;
 using PokerProject.Services;
@@ -113,6 +114,14 @@ namespace PokerProject.Controllers
         public async Task<List<ParticipantDto>> GetParticipants(int gameId)
         {
             return await _gameService.GetParticipantsAsync(gameId);
+        }
+
+        [HttpDelete("{gameId}/participants/{userId}")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoveParticipant(int gameId, int userId)
+        {
+            var updatedParticipants = await _gameService.RemoveParticipantAsync(gameId, userId);
+            return Ok(updatedParticipants); 
         }
     }
 }
