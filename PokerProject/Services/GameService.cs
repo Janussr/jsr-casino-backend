@@ -10,6 +10,7 @@ namespace PokerProject.Services
         Task<GameDto> StartGameAsync();
         Task<ScoreDto> AddScoreAsync(int gameId, int userId, int value);
         Task<GameDto> EndGameAsync(int gameId);
+        Task<GameDto> CancelGameAsync(int gameId);
         Task<List<GameDto>> GetAllGamesAsync();
         Task<GameDto?> GetGameByIdAsync(int gameId);
         Task<GameDetailsDto?> GetGameDetailsAsync(int gameId);
@@ -63,6 +64,13 @@ namespace PokerProject.Services
         // Add score for a player in a game
         public async Task<ScoreDto> AddScoreAsync(int gameId, int userId, int points)
         {
+            var game = await _context.Games.FindAsync(gameId);
+            if (game == null)
+                throw new Exception("Game not found");
+
+            if (game.IsFinished)
+                throw new InvalidOperationException("Spillet er slut – kan ikke tilføje points.");
+
             var score = new Score
             {
                 GameId = gameId,
@@ -96,7 +104,7 @@ namespace PokerProject.Services
                 throw new Exception("Game already finished");
 
             if (!game.Scores.Any())
-                throw new Exception("No scores registered");
+                throw new InvalidOperationException("No scores registered");
 
             // Beregn totals pr spiller
             var totals = game.Scores
@@ -136,6 +144,36 @@ namespace PokerProject.Services
                 StartedAt = game.StartedAt,
                 EndedAt = game.EndedAt,
                 IsFinished = game.IsFinished,
+            };
+        }
+
+        public async Task<GameDto> CancelGameAsync(int gameId)
+        {
+            var game = await _context.Games
+                .Include(g => g.Scores)
+                .Include(g => g.Participants)
+                .FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                throw new KeyNotFoundException("Game not found");
+
+            if (game.IsFinished)
+                throw new InvalidOperationException("Game already finished");
+
+            if (game.Scores.Any())
+                throw new InvalidOperationException("Cannot cancel a game with scores");
+
+            _context.Games.Remove(game);
+
+            await _context.SaveChangesAsync();
+
+            return new GameDto
+            {
+                Id = game.Id,
+                GameNumber = game.GameNumber,
+                StartedAt = game.StartedAt,
+                EndedAt = DateTime.UtcNow,
+                IsFinished = true
             };
         }
 
@@ -214,6 +252,10 @@ namespace PokerProject.Services
                 .FirstOrDefaultAsync(g => g.Id == gameId);
 
             if (game == null) return null;
+
+            //TODO: Role authenticate. Så Admin kan se siden, men almindelige spiller kan ikke.
+            if (!game.IsFinished)
+                throw new InvalidOperationException("Spillet er ikke slut endnu");
 
             // Summer points pr spiller
             var scores = game.Scores

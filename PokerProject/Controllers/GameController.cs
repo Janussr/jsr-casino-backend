@@ -24,20 +24,53 @@ namespace PokerProject.Controllers
             return Ok(game);
         }
 
-        // Add score
+        // Add game points
         [HttpPost("{gameId}/score")]
         public async Task<ActionResult<ScoreDto>> AddScore(int gameId, [FromBody] AddScoreDto dto)
         {
-            var added = await _gameService.AddScoreAsync(gameId, dto.UserId, dto.Value);
-            return Ok(added);
+            try
+            {
+                var added = await _gameService.AddScoreAsync(gameId, dto.UserId, dto.Value);
+                return Ok(added);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // End game
         [HttpPost("{gameId}/end")]
         public async Task<ActionResult<GameDto>> EndGame(int gameId)
         {
-            var ended = await _gameService.EndGameAsync(gameId);
-            return Ok(ended);
+            try
+            {
+                var ended = await _gameService.EndGameAsync(gameId);
+                return Ok(ended);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+           
+        }
+
+        [HttpPost("{gameId}/cancel")]
+        public async Task<ActionResult<GameDto>> CancelGame(int gameId)
+        {
+            try
+            {
+                var game = await _gameService.CancelGameAsync(gameId);
+                return Ok(game);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // Get all games
@@ -48,24 +81,23 @@ namespace PokerProject.Controllers
             return Ok(games);
         }
 
-        // Get single game
-        //[HttpGet("{gameId}")]
-        //public async Task<ActionResult<GameDto>> GetGame(int gameId)
-        //{
-        //    var game = await _gameService.GetGameByIdAsync(gameId);
-        //    if (game == null) return NotFound();
-        //    return Ok(game);
-        //}
-
         [HttpGet("{id}")]
         public async Task<ActionResult<GameDetailsDto>> GetGameDetails(int id)
         {
+            try
+            {
             var game = await _gameService.GetGameDetailsAsync(id);
+
 
             if (game == null)
                 return NotFound();
-
             return Ok(game);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+
         }
 
         // Tilføj deltagere
