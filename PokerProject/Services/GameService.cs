@@ -18,6 +18,7 @@ namespace PokerProject.Services
         Task<List<ParticipantDto>> GetParticipantsAsync(int gameId);
         Task<bool> IsUserParticipantAsync(int gameId, int userId);
         Task<List<ParticipantDto>> RemoveParticipantAsync(int gameId, int userId);
+        Task<PlayerScoreDetailsDto> GetPlayerScoreEntries(int gameId, int userId);
     }
 
 
@@ -177,7 +178,7 @@ namespace PokerProject.Services
                 IsFinished = true
             };
         }
-        
+
         public async Task<List<GameDto>> GetAllGamesAsync()
         {
             var games = await _context.Games
@@ -197,7 +198,7 @@ namespace PokerProject.Services
 
                     Scores = g.Scores.Select(s => new ScoreDto
                     {
-                        Id= s.Id,
+                        Id = s.Id,
                         UserId = s.UserId,
                         UserName = s.User.Username,
                         Points = s.Points
@@ -306,6 +307,33 @@ namespace PokerProject.Services
             };
         }
 
+        public async Task<PlayerScoreDetailsDto> GetPlayerScoreEntries(int gameId, int userId)
+        {
+            var scores = await _context.Scores
+                .Where(s => s.GameId == gameId && s.UserId == userId)
+                .OrderBy(s => s.CreatedAt)
+                .Select(s => new ScoreEntryDto
+                {
+                    Id = s.Id,
+                    Points = s.Points,
+                    CreatedAt = s.CreatedAt
+                })
+                .ToListAsync();
+
+            if (!scores.Any())
+                throw new KeyNotFoundException("No scores found for this player in this game");
+
+            var user = await _context.Users.FindAsync(userId);
+
+            return new PlayerScoreDetailsDto
+            {
+                UserId = userId,
+                UserName = user!.Name,
+                TotalPoints = scores.Sum(s => s.Points),
+                Entries = scores
+            };
+        }
+
         public async Task AddParticipantsAsync(int gameId, List<int> userIds)
         {
             foreach (var userId in userIds)
@@ -350,6 +378,10 @@ namespace PokerProject.Services
             var game = await _context.Games
                 .Include(g => g.Participants)
                 .FirstOrDefaultAsync(g => g.Id == gameId);
+
+            var hasScores = await _context.Scores.AnyAsync(s => s.GameId == gameId && s.UserId == userId);
+            if (hasScores)
+                throw new InvalidOperationException("Cannot remove player who already has scores");
 
             if (game == null)
                 throw new KeyNotFoundException("Game not found");

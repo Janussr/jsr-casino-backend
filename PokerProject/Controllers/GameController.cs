@@ -123,5 +123,19 @@ namespace PokerProject.Controllers
             var updatedParticipants = await _gameService.RemoveParticipantAsync(gameId, userId);
             return Ok(updatedParticipants); 
         }
+
+        [HttpGet("{gameId}/players/{userId}/scores")]
+        public async Task<ActionResult<PlayerScoreDetailsDto>> GetPlayerScores(int gameId, int userId)
+        {
+            try
+            {
+                var result = await _gameService.GetPlayerScoreEntries(gameId, userId);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
     }
 }
