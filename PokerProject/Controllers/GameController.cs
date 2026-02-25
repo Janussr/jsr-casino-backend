@@ -18,8 +18,8 @@ namespace PokerProject.Controllers
         }
 
         // Start a new game
-        [HttpPost("start")]
         [Authorize(Roles = "Admin")]
+        [HttpPost("start")]
         public async Task<ActionResult<GameDto>> StartGame()
         {
             var game = await _gameService.StartGameAsync();
@@ -42,6 +42,7 @@ namespace PokerProject.Controllers
         }
 
         // End game
+        [Authorize(Roles = "Admin")]
         [HttpPost("{gameId}/end")]
         public async Task<ActionResult<GameDto>> EndGame(int gameId)
         {
@@ -57,6 +58,7 @@ namespace PokerProject.Controllers
            
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("{gameId}/cancel")]
         public async Task<ActionResult<GameDto>> CancelGame(int gameId)
         {
@@ -77,8 +79,6 @@ namespace PokerProject.Controllers
 
         // Get all games
         [HttpGet]
-        //[Authorize(Roles = "User,Admin")]
-        //[Authorize]
         public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
             var games = await _gameService.GetAllGamesAsync();
