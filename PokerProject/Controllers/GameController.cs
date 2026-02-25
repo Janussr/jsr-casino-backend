@@ -19,6 +19,7 @@ namespace PokerProject.Controllers
 
         // Start a new game
         [HttpPost("start")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GameDto>> StartGame()
         {
             var game = await _gameService.StartGameAsync();
@@ -76,6 +77,8 @@ namespace PokerProject.Controllers
 
         // Get all games
         [HttpGet]
+        //[Authorize(Roles = "User,Admin")]
+        //[Authorize]
         public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
             var games = await _gameService.GetAllGamesAsync();

@@ -1,7 +1,11 @@
-﻿using PokerProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using PokerProject.Data;
 using PokerProject.DTOs;
 using PokerProject.Models;
-using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace PokerProject.Services
 {
@@ -10,16 +14,19 @@ namespace PokerProject.Services
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<UserDto?> GetUserByIdAsync(int id);
         Task<UserDto> RegisterAsync(RegisterUserDto dto);
-
+        Task<string?> LoginAndGenerateTokenAsync(string username, string password);
     }
 
     public class UserService : IUserService
     {
         private readonly PokerDbContext _context;
+        private readonly string _jwtKey;
 
-        public UserService(PokerDbContext context)
+        public UserService(PokerDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _jwtKey = configuration["JwtSettings:Secret"]
+                ?? throw new Exception("JWT Secret not configured in appsettings.json"); ;
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
@@ -57,7 +64,8 @@ namespace PokerProject.Services
             {
                 Username = dto.Username,
                 Name = dto.Name,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                Role = "User"
             };
 
             _context.Users.Add(user);
@@ -71,6 +79,37 @@ namespace PokerProject.Services
             };
         }
 
+        public async Task<string?> LoginAndGenerateTokenAsync(string username, string password)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null) return null;
+
+            bool verified = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+            if (!verified) return null;
+
+            return GenerateJwtToken(user);
+        }
+
+       public string GenerateJwtToken(User user)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_jwtKey);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim("id", user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
+            }),
+            Expires = DateTime.UtcNow.AddDays(7),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
 
     }
 }

@@ -46,5 +46,27 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
+    //[HttpPost("login")]
+    //public async Task<ActionResult<UserDto>> Login(LoginUserDto dto)
+    //{
+    //    var user = await _userService.LoginAsync(dto.Username, dto.Password);
+
+    //    if (user == null)
+    //        return Unauthorized("Invalid username or password");
+
+    //    return Ok(user);
+    //}
+
+    [HttpPost("login")]
+    public async Task<ActionResult<object>> Login(LoginUserDto dto)
+    {
+        var token = await _userService.LoginAndGenerateTokenAsync(dto.Username, dto.Password);
+
+        if (token == null)
+            return Unauthorized("Invalid username or password");
+
+        return Ok(new { Token = token });
+    }
+
 
 }
