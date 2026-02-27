@@ -9,6 +9,7 @@ namespace PokerProject.Services
     {
         Task<GameDto> StartGameAsync();
         Task<ScoreDto> AddScoreAsync(int gameId, int userId, int value);
+        Task<ScoreDto> RemoveScoreAsync(int scoreId);
         Task<GameDto> EndGameAsync(int gameId);
         Task<GameDto> CancelGameAsync(int gameId);
         Task<List<GameDto>> GetAllGamesAsync();
@@ -63,7 +64,7 @@ namespace PokerProject.Services
 
 
 
-        // Add score for a player in a game
+        // Add points for a player in a game
         public async Task<ScoreDto> AddScoreAsync(int gameId, int userId, int points)
         {
             var game = await _context.Games.FindAsync(gameId);
@@ -88,6 +89,32 @@ namespace PokerProject.Services
             {
                 UserId = score.UserId,
                 Points = score.Points,
+            };
+        }
+
+        public async Task<ScoreDto> RemoveScoreAsync(int scoreId)
+        {
+            var score = await _context.Scores.FindAsync(scoreId);
+            if (score == null)
+                throw new Exception("Score not found");
+
+            var game = await _context.Games.FindAsync(score.GameId);
+            if (game == null)
+                throw new Exception("Game not found");
+
+            if (game.IsFinished)
+                throw new InvalidOperationException("Game has ended - can't remove points.");
+
+            // Sæt score til 0
+            score.Points = 0;
+            await _context.SaveChangesAsync();
+
+            return new ScoreDto
+            {
+                Id = score.Id,
+                GameId = score.GameId,
+                UserId = score.UserId,
+                Points = score.Points
             };
         }
 
@@ -121,7 +148,6 @@ namespace PokerProject.Services
 
             var winnerData = totals.First();
 
-            //  Opret HallOfFame entry
             var hallOfFame = new HallOfFame
             {
                 GameId = game.Id,
@@ -253,10 +279,6 @@ namespace PokerProject.Services
                 .FirstOrDefaultAsync(g => g.Id == gameId);
 
             if (game == null) return null;
-
-            //if (!game.IsFinished)
-            //    throw new InvalidOperationException("Spillet er ikke slut endnu");
-
 
             //Admin kan se scoreboard men User kan ikke.
             if (!game.IsFinished && role != "Admin")

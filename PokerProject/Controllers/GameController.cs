@@ -124,8 +124,17 @@ namespace PokerProject.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveParticipant(int gameId, int userId)
         {
-            var updatedParticipants = await _gameService.RemoveParticipantAsync(gameId, userId);
-            return Ok(updatedParticipants); 
+
+            try
+            {
+                var updatedParticipants = await _gameService.RemoveParticipantAsync(gameId, userId);
+                return Ok(updatedParticipants);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+
         }
 
         [HttpGet("{gameId}/players/{userId}/scores")]
@@ -139,6 +148,26 @@ namespace PokerProject.Controllers
             catch (KeyNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+        }
+
+        // Controller
+        [HttpDelete("points/{scoreId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoveGamePoints(int scoreId)
+        {
+            try
+            {
+                var updatedScore = await _gameService.RemoveScoreAsync(scoreId);
+                return Ok(updatedScore);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
     }

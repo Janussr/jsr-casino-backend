@@ -6,5 +6,6 @@
         public int UserId { get; set; }
         public string UserName { get; set; } = null!;  
         public int Points { get; set; }
+        public int GameId { get; set; }
     }
 }
