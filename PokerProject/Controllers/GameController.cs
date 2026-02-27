@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokerProject.DTOs;
-using PokerProject.Models;
 using PokerProject.Services;
 
 namespace PokerProject.Controllers
@@ -17,7 +16,6 @@ namespace PokerProject.Controllers
             _gameService = gameService;
         }
 
-        // Start a new game
         [Authorize(Roles = "Admin")]
         [HttpPost("start")]
         public async Task<ActionResult<GameDto>> StartGame()
@@ -41,7 +39,6 @@ namespace PokerProject.Controllers
             }
         }
 
-        // End game
         [Authorize(Roles = "Admin")]
         [HttpPost("{gameId}/end")]
         public async Task<ActionResult<GameDto>> EndGame(int gameId)
@@ -77,7 +74,6 @@ namespace PokerProject.Controllers
             }
         }
 
-        // Get all games
         [HttpGet]
         public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
@@ -90,21 +86,27 @@ namespace PokerProject.Controllers
         {
             try
             {
-            var game = await _gameService.GetGameDetailsAsync(id);
+                //I prefer getting roles this way.
+                var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
+                var game = await _gameService.GetGameDetailsAsync(id, role);
 
-            if (game == null)
-                return NotFound();
-            return Ok(game);
+                if (game == null)
+                    return NotFound();
+
+                return Ok(game);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(); 
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
-
         }
 
-        // Tilføj deltagere
+        [Authorize(Roles = "Admin, User")]
         [HttpPost("{gameId}/participants")]
         public async Task<IActionResult> AddParticipants(int gameId, [FromBody] AddParticipantsDto dto)
         {
@@ -112,7 +114,6 @@ namespace PokerProject.Controllers
             return Ok();
         }
 
-        // Hent deltagere
         [HttpGet("{gameId}/participants")]
         public async Task<List<ParticipantDto>> GetParticipants(int gameId)
         {
@@ -120,7 +121,7 @@ namespace PokerProject.Controllers
         }
 
         [HttpDelete("{gameId}/participants/{userId}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveParticipant(int gameId, int userId)
         {
             var updatedParticipants = await _gameService.RemoveParticipantAsync(gameId, userId);

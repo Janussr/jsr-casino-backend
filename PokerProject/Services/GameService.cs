@@ -13,7 +13,7 @@ namespace PokerProject.Services
         Task<GameDto> CancelGameAsync(int gameId);
         Task<List<GameDto>> GetAllGamesAsync();
         Task<GameDto?> GetGameByIdAsync(int gameId);
-        Task<GameDetailsDto?> GetGameDetailsAsync(int gameId);
+        Task<GameDetailsDto?> GetGameDetailsAsync(int gameId, string? role);
         Task AddParticipantsAsync(int gameId, List<int> userIds);
         Task<List<ParticipantDto>> GetParticipantsAsync(int gameId);
         Task<bool> IsUserParticipantAsync(int gameId, int userId);
@@ -243,7 +243,7 @@ namespace PokerProject.Services
             };
         }
 
-        public async Task<GameDetailsDto?> GetGameDetailsAsync(int gameId)
+        public async Task<GameDetailsDto?> GetGameDetailsAsync(int gameId, string? role)
         {
             var game = await _context.Games
                 .Include(g => g.Scores)
@@ -254,21 +254,13 @@ namespace PokerProject.Services
 
             if (game == null) return null;
 
-            //TODO: Role authenticate. Så Admin kan se siden, men almindelige spiller kan ikke.
-            if (!game.IsFinished)
-                throw new InvalidOperationException("Spillet er ikke slut endnu");
-
-
-            // TODO: DETTE TJEK ER TIL SÅ ADMIN KAN FÅ LOV AT SE SCOREBOARD MEN ALMINDELIG KAN IKKE.
             //if (!game.IsFinished)
-            //{
-            //    // Tjek om brugeren er admin
-            //    if (!user.IsInRole("Admin"))
-            //    {
-            //        throw new UnauthorizedAccessException("Spillet er ikke slut endnu, og du har ikke adgang.");
-            //    }
-            //    // Admin kan fortsætte og se detaljerne
-            //}
+            //    throw new InvalidOperationException("Spillet er ikke slut endnu");
+
+
+            //Admin kan se scoreboard men User kan ikke.
+            if (!game.IsFinished && role != "Admin")
+                throw new UnauthorizedAccessException();
 
 
             // Summer points pr spiller
@@ -282,7 +274,6 @@ namespace PokerProject.Services
                 })
                 .ToList();
 
-            // Map winner
             WinnerDto? winnerDto = null;
             if (game.Winner != null)
             {

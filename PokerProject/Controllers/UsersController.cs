@@ -14,8 +14,6 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
-
-
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterUserDto dto)
     {
@@ -45,17 +43,6 @@ public class UsersController : ControllerBase
         var users = await _userService.GetAllUsersAsync();
         return Ok(users);
     }
-
-    //[HttpPost("login")]
-    //public async Task<ActionResult<UserDto>> Login(LoginUserDto dto)
-    //{
-    //    var user = await _userService.LoginAsync(dto.Username, dto.Password);
-
-    //    if (user == null)
-    //        return Unauthorized("Invalid username or password");
-
-    //    return Ok(user);
-    //}
 
     [HttpPost("login")]
     public async Task<ActionResult<object>> Login(LoginUserDto dto)
