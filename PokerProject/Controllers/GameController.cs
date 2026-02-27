@@ -170,5 +170,26 @@ namespace PokerProject.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        [HttpPost("{gameId}/points/bulk")]
+        public async Task<IActionResult> AddScoresBulk(int gameId, [FromBody] BulkAddScoresDto dto)
+        {
+            if (gameId != dto.GameId)
+                return BadRequest(new { message = "GameId mismatch" });
+
+            try
+            {
+                var updatedScores = await _gameService.AddScoresBulkAsync(dto);
+                return Ok(updatedScores);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
     }
 }

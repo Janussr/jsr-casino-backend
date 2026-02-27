@@ -9,6 +9,7 @@ namespace PokerProject.Services
     {
         Task<GameDto> StartGameAsync();
         Task<ScoreDto> AddScoreAsync(int gameId, int userId, int value);
+        Task<List<ScoreDto>> AddScoresBulkAsync(BulkAddScoresDto dto);
         Task<ScoreDto> RemoveScoreAsync(int scoreId);
         Task<GameDto> EndGameAsync(int gameId);
         Task<GameDto> CancelGameAsync(int gameId);
@@ -90,6 +91,54 @@ namespace PokerProject.Services
                 UserId = score.UserId,
                 Points = score.Points,
             };
+        }
+
+        public async Task<List<ScoreDto>> AddScoresBulkAsync(BulkAddScoresDto dto)
+        {
+            var game = await _context.Games
+                .Include(g => g.Scores)
+                .FirstOrDefaultAsync(g => g.Id == dto.GameId);
+
+            if (game == null)
+                throw new Exception("Game not found");
+
+            if (game.IsFinished)
+                throw new InvalidOperationException("Game has ended - cant add points.");
+
+            var addedScores = new List<Score>();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                foreach (var s in dto.Scores)
+                {
+                    var score = new Score
+                    {
+                        GameId = game.Id,
+                        UserId = s.UserId,
+                        Points = s.Points,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    _context.Scores.Add(score);
+                    addedScores.Add(score);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
+            return addedScores.Select(s => new ScoreDto
+            {
+                Id = s.Id,
+                UserId = s.UserId,
+                Points = s.Points
+            }).ToList();
         }
 
         public async Task<ScoreDto> RemoveScoreAsync(int scoreId)
