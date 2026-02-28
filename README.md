@@ -10,4 +10,4 @@ The purpose is to track poker scores, determine winners, and keep a history of g
 
 ## Frontend
 The frontend for this project can be found here:  
-https://github.com/Janussr/poker-board
+https://github.com/Janussr/casino-frontend
