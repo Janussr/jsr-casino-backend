@@ -441,9 +441,10 @@ namespace PokerProject.Services
                 .Include(g => g.Participants)
                 .FirstOrDefaultAsync(g => g.Id == gameId);
 
-            var hasScores = await _context.Scores.AnyAsync(s => s.GameId == gameId && s.UserId == userId);
-            if (hasScores)
-                throw new InvalidOperationException("Cannot remove player who already has scores");
+            //Cannot be deleted if has score.
+            //var hasScores = await _context.Scores.AnyAsync(s => s.GameId == gameId && s.UserId == userId);
+            //if (hasScores)
+            //    throw new InvalidOperationException("Cannot remove player who already has scores");
 
             if (game == null)
                 throw new KeyNotFoundException("Game not found");
