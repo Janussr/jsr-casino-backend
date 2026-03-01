@@ -2,6 +2,7 @@
 using PokerProject.Data;
 using PokerProject.DTOs;
 using PokerProject.Models;
+using static Score;
 
 namespace PokerProject.Services
 {
@@ -22,6 +23,9 @@ namespace PokerProject.Services
         Task<bool> IsUserParticipantAsync(int gameId, int userId);
         Task<List<ParticipantDto>> RemoveParticipantAsync(int gameId, int userId);
         Task<PlayerScoreDetailsDto> GetPlayerScoreEntries(int gameId, int userId);
+        Task<ScoreDto> RegisterKnockoutAsync(int gameId, int knockerUserId, int knockedOutUserId);
+        Task<ScoreDto> RegisterRebuyAsync(int gameId, int userId);
+        Task UpdateRulesAsync(int gameId, UpdateRulesDto dto);
     }
 
 
@@ -265,6 +269,8 @@ namespace PokerProject.Services
                     StartedAt = g.StartedAt,
                     EndedAt = g.EndedAt,
                     IsFinished = g.IsFinished,
+                    RebuyValue = g.RebuyValue,
+                    BountyValue = g.BountyValue,
 
                     Participants = g.Participants.Select(p => new ParticipantDto
                     {
@@ -510,6 +516,98 @@ namespace PokerProject.Services
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<ScoreDto> RegisterKnockoutAsync(int gameId, int knockerUserId, int knockedOutUserId)
+        {
+            var game = await _context.Games
+                .Include(g => g.Participants)
+                .Include(g => g.Scores)
+                .FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                throw new KeyNotFoundException("Game not found");
+
+            if (game.BountyValue == null)
+                throw new InvalidOperationException("Bounty value not set by admin");
+
+            var knocker = game.Participants.FirstOrDefault(p => p.UserId == knockerUserId);
+            var knockedOut = game.Participants.FirstOrDefault(p => p.UserId == knockedOutUserId);
+
+            if (knocker == null || knockedOut == null)
+                throw new InvalidOperationException("Participants not found");
+
+            int bountyEarned = game.BountyValue.Value * (knockedOut.ActiveBounties == 0 ? 1 : knockedOut.ActiveBounties);
+
+            // Add points to knocker
+            var score = new Score
+            {
+                GameId = gameId,
+                UserId = knockerUserId,
+                Points = bountyEarned,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Scores.Add(score);
+
+            // Reset knockedOut's active bounties
+            knockedOut.ActiveBounties = 0;
+
+            await _context.SaveChangesAsync();
+
+            return new ScoreDto
+            {
+                UserId = knockerUserId,
+                Points = bountyEarned
+            };
+        }
+
+
+        public async Task<ScoreDto> RegisterRebuyAsync(int gameId, int userId)
+        {
+            var game = await _context.Games
+                .Include(g => g.Participants)
+                .Include(g => g.Scores)
+                .FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                throw new KeyNotFoundException("Game not found");
+
+            if (game.RebuyValue == null)
+                throw new InvalidOperationException("Rebuy value not set by admin");
+
+            var participant = game.Participants.FirstOrDefault(p => p.UserId == userId);
+            if (participant == null)
+                throw new InvalidOperationException("User not participant");
+
+            participant.RebuyCount++;
+
+            var score = new Score
+            {
+                GameId = gameId,
+                UserId = userId,
+                Points = -game.RebuyValue.Value,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Scores.Add(score);
+            await _context.SaveChangesAsync();
+
+            return new ScoreDto
+            {
+                UserId = userId,
+                Points = score.Points
+            };
+        }
+
+        public async Task UpdateRulesAsync(int gameId, UpdateRulesDto dto)
+        {
+            var game = await _context.Games.FindAsync(gameId);
+            if (game == null) throw new KeyNotFoundException("Game not found");
+
+            game.RebuyValue = dto.RebuyValue;
+            game.BountyValue = dto.BountyValue;
+
+            await _context.SaveChangesAsync();
         }
 
     }

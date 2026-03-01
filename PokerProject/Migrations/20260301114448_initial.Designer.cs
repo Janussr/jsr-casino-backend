@@ -12,7 +12,7 @@ using PokerProject.Data;
 namespace PokerProject.Migrations
 {
     [DbContext(typeof(PokerDbContext))]
-    [Migration("20260223154614_initial")]
+    [Migration("20260301114448_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -33,6 +33,9 @@ namespace PokerProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BountyValue")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("EndedAt")
                         .HasColumnType("datetime2");
 
@@ -41,6 +44,9 @@ namespace PokerProject.Migrations
 
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("RebuyValue")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("datetime2");
@@ -83,6 +89,36 @@ namespace PokerProject.Migrations
                     b.ToTable("HallOfFames");
                 });
 
+            modelBuilder.Entity("PokerProject.Models.GameParticipant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActiveBounties")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RebuyCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("GameId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("GameParticipants");
+                });
+
             modelBuilder.Entity("PokerProject.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -99,6 +135,10 @@ namespace PokerProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -126,6 +166,9 @@ namespace PokerProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -159,6 +202,25 @@ namespace PokerProject.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PokerProject.Models.GameParticipant", b =>
+                {
+                    b.HasOne("Game", "Game")
+                        .WithMany("Participants")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PokerProject.Models.User", "User")
+                        .WithMany("GameParticipants")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Score", b =>
                 {
                     b.HasOne("Game", "Game")
@@ -180,6 +242,8 @@ namespace PokerProject.Migrations
 
             modelBuilder.Entity("Game", b =>
                 {
+                    b.Navigation("Participants");
+
                     b.Navigation("Scores");
 
                     b.Navigation("Winner");
@@ -187,6 +251,8 @@ namespace PokerProject.Migrations
 
             modelBuilder.Entity("PokerProject.Models.User", b =>
                 {
+                    b.Navigation("GameParticipants");
+
                     b.Navigation("HallOfFames");
 
                     b.Navigation("Scores");

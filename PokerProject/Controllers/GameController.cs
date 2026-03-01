@@ -209,5 +209,34 @@ namespace PokerProject.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+      
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{gameId}/rules")]
+        public async Task<IActionResult> UpdateRules(int gameId, [FromBody] UpdateRulesDto dto)
+        {
+            await _gameService.UpdateRulesAsync(gameId, dto);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("{gameId}/rebuy")]
+        public async Task<IActionResult> Rebuy(int gameId)
+        {
+            var userId = int.Parse(User.FindFirst("id")!.Value);
+
+            var result = await _gameService.RegisterRebuyAsync(gameId, userId);
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("{gameId}/bounty")]
+        public async Task<IActionResult> RegisterKnockout(int gameId, [FromBody] KnockoutDto dto)
+        {
+            var userId = int.Parse(User.FindFirst("id")!.Value);
+
+            var result = await _gameService.RegisterKnockoutAsync(gameId, userId, dto.KnockedOutUserId);
+            return Ok(result);
+        }
     }
 }

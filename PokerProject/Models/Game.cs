@@ -4,7 +4,8 @@ public class Game
 {
     public int Id { get; set; }
     public int GameNumber { get; set; }
-
+    public int? RebuyValue { get; set; }
+    public int? BountyValue { get; set; }
     public DateTime StartedAt { get; set; } = DateTime.UtcNow;
     public DateTime? EndedAt { get; set; }
 

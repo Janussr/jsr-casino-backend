@@ -12,4 +12,12 @@ public class Score
 
     public int Points { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public ScoreType Type { get; set; }
+    public enum ScoreType
+    {
+        Manual,
+        Rebuy,
+        Bounty
+    }
 }

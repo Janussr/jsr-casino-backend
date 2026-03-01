@@ -30,6 +30,9 @@ namespace PokerProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BountyValue")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("EndedAt")
                         .HasColumnType("datetime2");
 
@@ -38,6 +41,9 @@ namespace PokerProject.Migrations
 
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("RebuyValue")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("datetime2");
@@ -88,7 +94,13 @@ namespace PokerProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ActiveBounties")
+                        .HasColumnType("int");
+
                     b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RebuyCount")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -151,6 +163,9 @@ namespace PokerProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
