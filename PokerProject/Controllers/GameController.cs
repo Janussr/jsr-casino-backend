@@ -191,5 +191,23 @@ namespace PokerProject.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+        [HttpDelete("remove/{gameId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoveGame(int gameId)
+        {
+            try
+            {
+                await _gameService.RemoveGameAsync(gameId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

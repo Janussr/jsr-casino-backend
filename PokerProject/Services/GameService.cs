@@ -13,6 +13,7 @@ namespace PokerProject.Services
         Task<ScoreDto> RemoveScoreAsync(int scoreId);
         Task<GameDto> EndGameAsync(int gameId);
         Task<GameDto> CancelGameAsync(int gameId);
+        Task RemoveGameAsync(int gameId);
         Task<List<GameDto>> GetAllGamesAsync();
         Task<GameDto?> GetGameByIdAsync(int gameId);
         Task<GameDetailsDto?> GetGameDetailsAsync(int gameId, string? role);
@@ -470,6 +471,45 @@ namespace PokerProject.Services
                     UserName = p.User.Name
                 })
                 .ToListAsync();
+        }
+
+        public async Task RemoveGameAsync(int gameId)
+        {
+            var game = await _context.Games
+                .Include(g => g.Scores)
+                .Include(g => g.Participants)
+                .Include(g => g.Winner)
+                .FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                throw new KeyNotFoundException("Game not found");
+
+            //if (game.IsFinished)
+            //    throw new InvalidOperationException("Cannot delete a finished game");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                _context.Scores.RemoveRange(game.Scores);
+
+                _context.GameParticipants.RemoveRange(game.Participants);
+
+                if (game.Winner != null)
+                {
+                    _context.HallOfFames.Remove(game.Winner);
+                }
+
+                _context.Games.Remove(game);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
     }
