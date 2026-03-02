@@ -23,7 +23,7 @@ namespace PokerProject.Services
         Task<bool> IsUserParticipantAsync(int gameId, int userId);
         Task<List<ParticipantDto>> RemoveParticipantAsync(int gameId, int userId);
         Task<PlayerScoreDetailsDto> GetPlayerScoreEntries(int gameId, int userId);
-        Task<ScoreDto> RegisterKnockoutAsync(int gameId, int knockerUserId, int knockedOutUserId);
+        Task RegisterKnockoutAsync(int gameId, int knockedOutUserId, int killerUserId);
         Task<ScoreDto> RegisterRebuyAsync(int gameId, int userId);
         Task UpdateRulesAsync(int gameId, UpdateRulesDto dto);
     }
@@ -85,7 +85,8 @@ namespace PokerProject.Services
                 GameId = gameId,
                 UserId = userId,
                 Points = points,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Type = Score.ScoreType.Chips,
             };
 
             _context.Scores.Add(score);
@@ -95,6 +96,8 @@ namespace PokerProject.Services
             {
                 UserId = score.UserId,
                 Points = score.Points,
+                GameId = score.GameId,
+                Type = score.Type,
             };
         }
 
@@ -123,7 +126,8 @@ namespace PokerProject.Services
                         GameId = game.Id,
                         UserId = s.UserId,
                         Points = s.Points,
-                        CreatedAt = DateTime.UtcNow
+                        CreatedAt = DateTime.UtcNow,
+                        Type = Score.ScoreType.Chips,
                     };
                     _context.Scores.Add(score);
                     addedScores.Add(score);
@@ -142,7 +146,8 @@ namespace PokerProject.Services
             {
                 Id = s.Id,
                 UserId = s.UserId,
-                Points = s.Points
+                Points = s.Points,
+                Type = s.Type
             }).ToList();
         }
 
@@ -275,7 +280,9 @@ namespace PokerProject.Services
                     Participants = g.Participants.Select(p => new ParticipantDto
                     {
                         UserId = p.UserId,
-                        UserName = p.User.Name
+                        UserName = p.User.Name,
+                        RebuyCount = p.RebuyCount,
+                        ActiveBounties = p.ActiveBounties,
                     }).ToList(),
 
                     Scores = g.Scores.Select(s => new ScoreDto
@@ -378,14 +385,17 @@ namespace PokerProject.Services
 
         public async Task<PlayerScoreDetailsDto> GetPlayerScoreEntries(int gameId, int userId)
         {
-            var scores = await _context.Scores
+            var scores = await _context.Scores.Include(s => s.KnockedOutUser)
                 .Where(s => s.GameId == gameId && s.UserId == userId)
                 .OrderBy(s => s.CreatedAt)
                 .Select(s => new ScoreEntryDto
                 {
                     Id = s.Id,
                     Points = s.Points,
-                    CreatedAt = s.CreatedAt
+                    CreatedAt = s.CreatedAt,
+                    Type = s.Type,
+                    KnockedOutUserId = s.KnockedOutUserId,
+                    KnockedOutUserName = s.KnockedOutUser != null ? s.KnockedOutUser.Name : null
                 })
                 .ToListAsync();
 
@@ -518,7 +528,7 @@ namespace PokerProject.Services
             }
         }
 
-        public async Task<ScoreDto> RegisterKnockoutAsync(int gameId, int knockerUserId, int knockedOutUserId)
+        public async Task RegisterKnockoutAsync(int gameId, int victimUserId, int killerUserId)
         {
             var game = await _context.Games
                 .Include(g => g.Participants)
@@ -526,39 +536,33 @@ namespace PokerProject.Services
                 .FirstOrDefaultAsync(g => g.Id == gameId);
 
             if (game == null)
-                throw new KeyNotFoundException("Game not found");
+                throw new Exception("Game not found");
 
-            if (game.BountyValue == null)
-                throw new InvalidOperationException("Bounty value not set by admin");
+            var killer = game.Participants.First(p => p.UserId == killerUserId);
+            var victim = game.Participants.First(p => p.UserId == victimUserId);
 
-            var knocker = game.Participants.FirstOrDefault(p => p.UserId == knockerUserId);
-            var knockedOut = game.Participants.FirstOrDefault(p => p.UserId == knockedOutUserId);
+            //if (killer.UserId == victim.UserId)
+            //    throw new Exception("You cannot knock yourself out");
 
-            if (knocker == null || knockedOut == null)
-                throw new InvalidOperationException("Participants not found");
+            killer.ActiveBounties += 1;
 
-            int bountyEarned = game.BountyValue.Value * (knockedOut.ActiveBounties == 0 ? 1 : knockedOut.ActiveBounties);
-
-            // Add points to knocker
-            var score = new Score
+            if (victim.ActiveBounties > 0)
             {
-                GameId = gameId,
-                UserId = knockerUserId,
-                Points = bountyEarned,
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.Scores.Add(score);
+                var points = victim.ActiveBounties * game.BountyValue;
 
-            // Reset knockedOut's active bounties
-            knockedOut.ActiveBounties = 0;
+                game.Scores.Add(new Score
+                {
+                    GameId = game.Id,
+                    UserId = killerUserId,
+                    Points = (int)points,
+                    Type = Score.ScoreType.Bounty,
+                    KnockedOutUserId = victimUserId
+                });
+            }
+
+            victim.ActiveBounties = 0;
 
             await _context.SaveChangesAsync();
-
-            return new ScoreDto
-            {
-                UserId = knockerUserId,
-                Points = bountyEarned
-            };
         }
 
 
@@ -586,7 +590,8 @@ namespace PokerProject.Services
                 GameId = gameId,
                 UserId = userId,
                 Points = -game.RebuyValue.Value,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Type = Score.ScoreType.Rebuy,
             };
 
             _context.Scores.Add(score);
@@ -595,7 +600,8 @@ namespace PokerProject.Services
             return new ScoreDto
             {
                 UserId = userId,
-                Points = score.Points
+                Points = score.Points,
+                Type = score.Type
             };
         }
 

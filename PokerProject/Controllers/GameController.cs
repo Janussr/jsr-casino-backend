@@ -233,10 +233,11 @@ namespace PokerProject.Controllers
         [HttpPost("{gameId}/bounty")]
         public async Task<IActionResult> RegisterKnockout(int gameId, [FromBody] KnockoutDto dto)
         {
-            var userId = int.Parse(User.FindFirst("id")!.Value);
+            var userId = User.GetUserId(); 
 
-            var result = await _gameService.RegisterKnockoutAsync(gameId, userId, dto.KnockedOutUserId);
-            return Ok(result);
+            await _gameService.RegisterKnockoutAsync(gameId, dto.KnockedOutUserId, userId);
+
+            return Ok();
         }
     }
 }

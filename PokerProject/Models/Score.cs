@@ -13,10 +13,13 @@ public class Score
     public int Points { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public int? KnockedOutUserId { get; set; }   
+    public User? KnockedOutUser { get; set; }
+
     public ScoreType Type { get; set; }
     public enum ScoreType
     {
-        Manual,
+        Chips,
         Rebuy,
         Bounty
     }

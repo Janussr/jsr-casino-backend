@@ -1,4 +1,6 @@
-﻿namespace PokerProject.DTOs
+﻿using static Score;
+
+namespace PokerProject.DTOs
 {
     public class ScoreDto
     {
@@ -7,5 +9,6 @@
         public string UserName { get; set; } = null!;  
         public int Points { get; set; }
         public int GameId { get; set; }
+        public ScoreType Type { get; set; }
     }
 }
